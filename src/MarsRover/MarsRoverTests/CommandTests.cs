@@ -7,11 +7,11 @@ using Xunit;
 
 namespace MarsRover.App
 {
-    public class MarsRoverTests
+    public class CommandTests
     {
         private IFixture fixture;
 
-        public MarsRoverTests()
+        public CommandTests()
         {
             fixture = new Fixture().Customize(new AutoMoqCustomization());
         }

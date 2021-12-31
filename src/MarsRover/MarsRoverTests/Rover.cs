@@ -2,23 +2,22 @@
 
 namespace MarsRover.App
 {
-
-
     internal class Rover
     {
-        private enum Direction
-        {
-            N, E, S, W
-        }
-        Direction currentDirection;
+        private Direction currentDirection;
+
         public Rover()
         {
             currentDirection = Direction.N;
         }
+
+        private enum Direction
+        {
+            N, E, S, W
+        }
+
         internal string Execute(string commands)
         {
-            var output = "";
-
             foreach (var command in commands)
             {
                 switch (command)
@@ -26,19 +25,17 @@ namespace MarsRover.App
                     case 'L':
                         TurnLeft();
                         break;
+
                     case 'R':
                         TurnRight();
                         break;
-
 
                     default:
                         throw new ArgumentException($"Invalid command: {command}");
                 }
             }
 
-            output = $"{currentDirection}"; 
-
-            return output;
+            return $"{currentDirection}";
         }
 
         private void TurnRight()
