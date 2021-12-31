@@ -2,15 +2,37 @@
 
 namespace MarsRover.App
 {
+    internal class RoverOutput
+    {
+        public readonly char direction;
+        public readonly Position position;
+        public readonly bool isNextPositionInTheDirectionBlocked;
+
+        public RoverOutput(char direction, Position position, bool isNextPositionInTheDirectionBlocked)
+        {
+            this.direction = direction;
+            this.position = position;
+            this.isNextPositionInTheDirectionBlocked = isNextPositionInTheDirectionBlocked;
+        }
+
+        public override string ToString()
+        {
+            if (isNextPositionInTheDirectionBlocked)
+                return $"0:{direction}:{position}";
+            else
+                return $"{direction}:{position}";
+        }
+    }
+
     internal class Rover
     {
         private Direction currentDirection;
-        private Coordinate currentPosition;
+        private Position currentPosition;
 
         public Rover()
         {
             currentDirection = Direction.N;
-            currentPosition = new Coordinate(0, 0);
+            currentPosition = new Position(0, 0);
         }
 
         private enum Direction
@@ -35,6 +57,7 @@ namespace MarsRover.App
                     case 'F':
                         moveForwards();
                         break;
+
                     case 'B':
                         moveBackwards();
                         break;
@@ -53,15 +76,16 @@ namespace MarsRover.App
             {
                 case Direction.N:
                 case Direction.S:
-                    currentPosition = currentPosition.DescreaseOneStepOnYAxis();
+                    currentPosition = currentPosition.DecreaseOneStepOnYAxis();
                     break;
 
                 case Direction.E:
                 case Direction.W:
-                    currentPosition = currentPosition.DescreaseOneStepOnYAxis();
+                    currentPosition = currentPosition.DecreaseOneStepOnYAxis();
                     break;
             }
         }
+
         private void moveForwards()
         {
             switch (currentDirection)

@@ -54,7 +54,7 @@ namespace MarsRover.App
         [InlineData("FBBBFBB", 0, -3)]
         public void WhenCommandToMoveBackOrFowrwardIsInput_ThenTheRoverChangesCoordinate(string commands, int expectedXCoord, int expectedYCoord)
         {
-            var expectedCoordinate = new Coordinate(expectedXCoord, expectedYCoord);
+            var expectedCoordinate = new Position(expectedXCoord, expectedYCoord);
             char expectedDirection = 'N';
 
             var r = new Rover();
@@ -66,7 +66,6 @@ namespace MarsRover.App
             Assert.Equal(expectedDirection, actualDirection);
             Assert.Equal(actualCoordinate, expectedCoordinate.ToString());
         }
-
 
         private static class TestDataProvider
         {
@@ -87,6 +86,5 @@ namespace MarsRover.App
                 return invalidCommands[random.Next(invalidCommands.Count)];
             }
         }
-
     }
 }
