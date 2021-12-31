@@ -2,7 +2,7 @@
 
 namespace MarsRover.App
 {
-    internal class Position
+    internal class Position:IEquatable<Position>
     {
         public readonly int x;
         public readonly int y;
@@ -34,6 +34,13 @@ namespace MarsRover.App
         public Position DecreaseOneStepOnXAxis()
         {
             return new Position(x - 1, y);
+        }
+
+        public bool Equals(Position? other)
+        {
+            var isOtherNotNull = other != null;
+
+            return  isOtherNotNull && x == other?.x && y == other.y;
         }
     }
 }

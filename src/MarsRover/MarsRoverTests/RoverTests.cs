@@ -16,6 +16,8 @@ namespace MarsRover.App
             fixture = new Fixture().Customize(new AutoMoqCustomization());
         }
 
+      
+
         [Theory]
         [InlineData("L", 'W')]
         [InlineData("R", 'E')]
@@ -25,12 +27,12 @@ namespace MarsRover.App
         [InlineData("RRR", 'W')]
         [InlineData("LLLL", 'N')]
         [InlineData("RRRR", 'N')]
-        public void WhenCommandToTurnIsInput_ThenTheRoverReturnsNewDirection(string commands, char expectedDirection)
+        public void WhenCommandToTurnIsInput_ThenTheRoverReturnsNewDirection2(string commands, char expectedDirection)
         {
             var r = new Rover();
 
             var output = r.Execute(commands);
-            var actualDirection = output.First();
+            var actualDirection = output.Direction;
 
             Assert.Equal(expectedDirection, actualDirection);
         }
@@ -52,7 +54,7 @@ namespace MarsRover.App
         [InlineData("BB", 0, -2)]
         [InlineData("BBB", 0, -3)]
         [InlineData("FBBBFBB", 0, -3)]
-        public void WhenCommandToMoveBackOrFowrwardIsInput_ThenTheRoverChangesCoordinate(string commands, int expectedXCoord, int expectedYCoord)
+        public void WhenCommandToMoveBackOrForwardIsInput_ThenTheRoverChangesCoordinate(string commands, int expectedXCoord, int expectedYCoord)
         {
             var expectedCoordinate = new Position(expectedXCoord, expectedYCoord);
             char expectedDirection = 'N';
@@ -60,11 +62,11 @@ namespace MarsRover.App
             var r = new Rover();
 
             var output = r.Execute(commands);
-            var actualDirection = output.First();
-            var actualCoordinate = output.Split(":")[1];
+            var actualDirection = output.Direction;
+            var actualCoordinate = output.Position;
 
             Assert.Equal(expectedDirection, actualDirection);
-            Assert.Equal(actualCoordinate, expectedCoordinate.ToString());
+            Assert.Equal(actualCoordinate, expectedCoordinate );
         }
 
         private static class TestDataProvider

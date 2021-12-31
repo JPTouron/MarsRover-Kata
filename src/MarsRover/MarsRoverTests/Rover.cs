@@ -2,27 +2,6 @@
 
 namespace MarsRover.App
 {
-    internal class RoverOutput
-    {
-        public readonly char direction;
-        public readonly Position position;
-        public readonly bool isNextPositionInTheDirectionBlocked;
-
-        public RoverOutput(char direction, Position position, bool isNextPositionInTheDirectionBlocked)
-        {
-            this.direction = direction;
-            this.position = position;
-            this.isNextPositionInTheDirectionBlocked = isNextPositionInTheDirectionBlocked;
-        }
-
-        public override string ToString()
-        {
-            if (isNextPositionInTheDirectionBlocked)
-                return $"0:{direction}:{position}";
-            else
-                return $"{direction}:{position}";
-        }
-    }
 
     internal class Rover
     {
@@ -40,7 +19,7 @@ namespace MarsRover.App
             N, E, S, W
         }
 
-        internal string Execute(string commands)
+        internal RoverOutput Execute(string commands)
         {
             foreach (var command in commands)
             {
@@ -67,7 +46,12 @@ namespace MarsRover.App
                 }
             }
 
-            return $"{currentDirection}:{currentPosition}";
+            return new RoverOutput(CurrentDirectionAsChar(), currentPosition, isNextPositionInTheDirectionBlocked: false);
+        }
+
+        private char CurrentDirectionAsChar()
+        {
+            return currentDirection.ToString()[0];
         }
 
         private void moveBackwards()
