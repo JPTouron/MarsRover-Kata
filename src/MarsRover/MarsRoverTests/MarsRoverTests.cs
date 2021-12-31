@@ -1,4 +1,5 @@
 using AutoFixture;
+using AutoFixture.AutoMoq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +7,15 @@ using Xunit;
 
 namespace MarsRover.App
 {
-
     public class MarsRoverTests
     {
+        private IFixture fixture;
+
+        public MarsRoverTests()
+        {
+            fixture = new Fixture().Customize(new AutoMoqCustomization());
+        }
+
         [Theory]
         [InlineData("L", 'W')]
         [InlineData("R", 'E')]
@@ -20,7 +27,6 @@ namespace MarsRover.App
         [InlineData("RRRR", 'N')]
         public void WhenCommandToTurnIsInput_ThenTheRoverReturnsNewDirection(string command, char expectedDirection)
         {
-
             var r = new Rover();
 
             var output = r.Execute(command);
@@ -29,30 +35,33 @@ namespace MarsRover.App
             Assert.Equal(expectedDirection, actualDirection);
         }
 
+        [Theory]
+        [MemberData(nameof(TestDataProvider.GetInvalidCommand), MemberType = typeof(TestDataProvider))]
+        public void WhenCommandInvalidCommandIsInput_ThenArgumentExceptionThrown(char command)
+        {
+            var r = new Rover();
+
+            Assert.Throws<ArgumentException>(() => r.Execute(command.ToString()));
+        }
+
         private static class TestDataProvider
         {
-            public static string GetInvalidCommands()
+            public static IEnumerable<object> GetInvalidCommand()
             {
+                var validCommands = new List<char> { 'L', 'R', 'M' };
 
-
-
-
-                var validCommands = new List<string> { "L", "R", "M" };
-
-                return
-
-
+                return new List<object[]> { new object[] { RandomCharacter(validCommands) } };
             }
-            public static char GetRandomCharacter(string text, Random rng)
+
+            public static char RandomCharacter(List<char> validCommands)
             {
-                int index = rng.Next(text.Length);
-                return text[index];
+                var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                var invalidCommands = chars.Except(validCommands).ToList();
+
+                var random = new Random();
+
+                return invalidCommands[random.Next(invalidCommands.Count)];
             }
-        }
-        [Theory]
-        [MemberData()]
-        public void WhenCommandInvalidCommandIsInput_ThenArgumentExceptionThrown(string command)
-        {
         }
     }
 }
