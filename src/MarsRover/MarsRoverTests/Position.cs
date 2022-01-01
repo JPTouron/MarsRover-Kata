@@ -2,7 +2,7 @@
 
 namespace MarsRover.App
 {
-    internal class Position:IEquatable<Position>
+    internal class Position : IEquatable<Position>
     {
         public readonly int x;
         public readonly int y;
@@ -18,20 +18,22 @@ namespace MarsRover.App
             return $"{x},{y}";
         }
 
-        public Position IncreaseOneStepOnYAxis()
+        public Position IncreaseOneStepOnYAxes()
         {
             return new Position(x, y + 1);
         }
-        public Position IncreaseOneStepOnXAxis()
+
+        public Position IncreaseOneStepOnXAxes()
         {
             return new Position(x + 1, y);
         }
 
-        public Position DecreaseOneStepOnYAxis()
+        public Position DecreaseOneStepOnYAxes()
         {
             return new Position(x, y - 1);
         }
-        public Position DecreaseOneStepOnXAxis()
+
+        public Position DecreaseOneStepOnXAxes()
         {
             return new Position(x - 1, y);
         }
@@ -40,7 +42,7 @@ namespace MarsRover.App
         {
             var isOtherNotNull = other != null;
 
-            return  isOtherNotNull && x == other?.x && y == other.y;
+            return isOtherNotNull && x == other?.x && y == other.y;
         }
     }
 }

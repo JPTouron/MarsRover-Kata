@@ -2,7 +2,6 @@
 
 namespace MarsRover.App
 {
-
     internal class Rover
     {
         private Direction currentDirection;
@@ -60,12 +59,12 @@ namespace MarsRover.App
             {
                 case Direction.N:
                 case Direction.S:
-                    currentPosition = currentPosition.DecreaseOneStepOnYAxis();
+                    currentPosition = currentPosition.DecreaseOneStepOnYAxes();
                     break;
 
                 case Direction.E:
                 case Direction.W:
-                    currentPosition = currentPosition.DecreaseOneStepOnYAxis();
+                    currentPosition = currentPosition.DecreaseOneStepOnYAxes();
                     break;
             }
         }
@@ -76,12 +75,12 @@ namespace MarsRover.App
             {
                 case Direction.N:
                 case Direction.S:
-                    currentPosition = currentPosition.IncreaseOneStepOnYAxis();
+                    currentPosition = currentPosition.IncreaseOneStepOnYAxes();
                     break;
 
                 case Direction.E:
                 case Direction.W:
-                    currentPosition = currentPosition.IncreaseOneStepOnXAxis();
+                    currentPosition = currentPosition.IncreaseOneStepOnXAxes();
                     break;
             }
         }

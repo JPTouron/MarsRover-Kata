@@ -16,8 +16,6 @@ namespace MarsRover.App
             fixture = new Fixture().Customize(new AutoMoqCustomization());
         }
 
-      
-
         [Theory]
         [InlineData("L", 'W')]
         [InlineData("R", 'E')]
@@ -27,7 +25,7 @@ namespace MarsRover.App
         [InlineData("RRR", 'W')]
         [InlineData("LLLL", 'N')]
         [InlineData("RRRR", 'N')]
-        public void WhenCommandToTurnIsInput_ThenTheRoverReturnsNewDirection2(string commands, char expectedDirection)
+        public void WhenCommandToTurnIsInput_ThenTheRoverReturnsNewDirection(string commands, char expectedDirection)
         {
             var r = new Rover();
 
@@ -66,7 +64,7 @@ namespace MarsRover.App
             var actualCoordinate = output.Position;
 
             Assert.Equal(expectedDirection, actualDirection);
-            Assert.Equal(actualCoordinate, expectedCoordinate );
+            Assert.Equal(actualCoordinate, expectedCoordinate);
         }
 
         private static class TestDataProvider

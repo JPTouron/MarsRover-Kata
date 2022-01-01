@@ -5,8 +5,6 @@ namespace MarsRover.App
 {
     public class PositionTests
     {
-
-
         [Theory]
         [InlineData(0, 0)]
         [InlineData(1, 4)]
@@ -30,7 +28,7 @@ namespace MarsRover.App
         public void WhenOneStepIncreasedOnYAxis_ThenNewPositionIsReturnedWithYCoordinateIsIncreasedByOne(int xCoord, int yCoord, int expectedXCoord, int expectedYCoord)
         {
             var pos = new Position(xCoord, yCoord);
-            var newPos = pos.IncreaseOneStepOnYAxis();
+            var newPos = pos.IncreaseOneStepOnYAxes();
 
             Assert.Equal(newPos.x, expectedXCoord);
             Assert.Equal(newPos.y, expectedYCoord);
@@ -45,7 +43,7 @@ namespace MarsRover.App
         public void WhenOneStepDecreasedOnYAxis_ThenNewPositionIsReturnedWithYCoordinateIsDecreasedByOne(int xCoord, int yCoord, int expectedXCoord, int expectedYCoord)
         {
             var pos = new Position(xCoord, yCoord);
-            var newPos = pos.DecreaseOneStepOnYAxis();
+            var newPos = pos.DecreaseOneStepOnYAxes();
 
             Assert.Equal(newPos.x, expectedXCoord);
             Assert.Equal(newPos.y, expectedYCoord);
@@ -60,7 +58,7 @@ namespace MarsRover.App
         public void WhenOneStepIncreasedOnXAxis_ThenNewPositionIsReturnedWithXCoordinateIsIncreasedByOne(int xCoord, int yCoord, int expectedXCoord, int expectedYCoord)
         {
             var pos = new Position(xCoord, yCoord);
-            var newPos = pos.IncreaseOneStepOnXAxis();
+            var newPos = pos.IncreaseOneStepOnXAxes();
 
             Assert.Equal(newPos.x, expectedXCoord);
             Assert.Equal(newPos.y, expectedYCoord);
@@ -75,40 +73,32 @@ namespace MarsRover.App
         public void WhenOneStepDecreasedOnXAxis_ThenNewPositionIsReturnedWithXCoordinateIsDecreasedByOne(int xCoord, int yCoord, int expectedXCoord, int expectedYCoord)
         {
             var pos = new Position(xCoord, yCoord);
-            var newPos = pos.DecreaseOneStepOnXAxis();
+            var newPos = pos.DecreaseOneStepOnXAxes();
 
             Assert.Equal(newPos.x, expectedXCoord);
             Assert.Equal(newPos.y, expectedYCoord);
             Assert.NotEqual(pos, newPos);
         }
 
-
         [Fact]
         public void WhenComparingPositionsWithSameCoordinates_ThenPositionsAreEqual()
         {
-
             var fixture = new Fixture();
             var position = fixture.Create<Position>();
             var position2 = new Position(position.x, position.y);
 
-
             Assert.Equal(position, position2);
-
         }
-
 
         [Fact]
         public void WhenComparingPositionsWithDifferentCoordinates_ThenPositionsAreNotEqual()
         {
-
             var fixture = new Fixture();
             var position = fixture.Create<Position>();
             var randomFactor = fixture.Create<int>();
             var position2 = new Position(position.x * randomFactor, position.y * randomFactor);
 
-
             Assert.NotEqual(position, position2);
-
         }
     }
 }
