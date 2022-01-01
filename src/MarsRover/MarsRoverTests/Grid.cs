@@ -111,42 +111,34 @@ namespace MarsRover.App
 
             internal Position MoveOneStepForwardOnXAxes(Position currentPosition)
             {
-                Position newPosition;
-                newPosition = currentPosition.IncreaseOneStepOnXAxes();
-                if (newPosition.X > areaWidth)
-                    newPosition = ResetXCoordinateTo(0, currentPosition);
-                return newPosition;
+                if (currentPosition.NextXCoordinate > areaWidth)
+                    return ResetXCoordinateTo(0, currentPosition);
+                else
+                    return currentPosition.IncreaseOneStepOnXAxes();
             }
 
             internal Position MoveOneStepForwardOnYAxes(Position currentPosition)
             {
-                Position newPosition;
-                newPosition = currentPosition.IncreaseOneStepOnYAxes();
-
-                if (newPosition.Y > areaHeight)
-                    newPosition = ResetYCoordinateTo(0, currentPosition);
-                return newPosition;
+                if (currentPosition.NextYCoordinate > areaHeight)
+                    return ResetYCoordinateTo(0, currentPosition);
+                else
+                    return currentPosition.IncreaseOneStepOnYAxes();
             }
 
             internal Position MoveOneStepBackwardsOnXAxes(Position currentPosition)
             {
-                Position newPosition;
-                newPosition = currentPosition.DecreaseOneStepOnXAxes();
-
-                if (newPosition.X < 0)
-                    newPosition = ResetXCoordinateTo(areaWidth, currentPosition);
-
-                return newPosition;
+                if (currentPosition.PreviousXCoordinate < 0)
+                    return ResetXCoordinateTo(areaWidth, currentPosition);
+                else
+                    return currentPosition.DecreaseOneStepOnXAxes();
             }
 
             internal Position MoveOneStepBackOnYAxes(Position currentPosition)
             {
-                Position newPosition;
-                newPosition = currentPosition.DecreaseOneStepOnYAxes();
-
-                if (newPosition.Y < 0)
-                    newPosition = ResetYCoordinateTo(areaHeight, currentPosition);
-                return newPosition;
+                if (currentPosition.PreviousYCoordinate < 0)
+                    return ResetYCoordinateTo(areaHeight, currentPosition);
+                else
+                    return currentPosition.DecreaseOneStepOnYAxes();
             }
 
             private Position ResetXCoordinateTo(int newXCoordinate, Position CurrentPosition)

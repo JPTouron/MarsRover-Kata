@@ -13,6 +13,14 @@ namespace MarsRover.App
             Y = y;
         }
 
+        public int NextXCoordinate => X + 1;
+
+        public int NextYCoordinate => Y + 1;
+
+        public int PreviousXCoordinate => X - 1;
+
+        public int PreviousYCoordinate => Y - 1;
+
         public override string ToString()
         {
             return $"{X},{Y}";
