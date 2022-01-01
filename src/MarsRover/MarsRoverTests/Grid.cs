@@ -4,6 +4,8 @@ namespace MarsRover.App
 {
     internal class Grid
     {
+        private PositionTranslator positionTranslator;
+
         //will take in an IObstacleProvider, which provides dimensions and can tell if an obstacle is at a determined position
         public Grid(int width, int height)
         {
@@ -17,8 +19,12 @@ namespace MarsRover.App
 
             CurrentDirection = Direction.N;
             CurrentPosition = new Position(0, 0);
+
+            positionTranslator = new PositionTranslator(width, height);
         }
 
+        //Refactor: Possible refactor, extracing knowledge of the direction from the grid, would allow to have different types of rotations and directions (ie: a more fine grained rotation)
+        //          this would require to inject this new dependency into the grid, could be simply done, but I'm lazy and is not required
         internal enum Direction
         {
             N, E, S, W
@@ -48,78 +54,109 @@ namespace MarsRover.App
                 CurrentDirection--;
         }
 
-        internal void MoveBackwards()
-        {
-            switch (CurrentDirection)
-            {
-                case Direction.N:
-                    CurrentPosition = CurrentPosition.DecreaseOneStepOnYAxes();
-
-                    if (CurrentPosition.Y < 0)
-                        CurrentPosition = new Position(CurrentPosition.X, Height);
-
-                    break;
-
-                case Direction.S:
-                    CurrentPosition = CurrentPosition.IncreaseOneStepOnYAxes();
-
-                    if (CurrentPosition.Y > Height)
-                        CurrentPosition = new Position(CurrentPosition.X, 0);
-
-                    break;
-
-                case Direction.E:
-                    CurrentPosition = CurrentPosition.DecreaseOneStepOnXAxes();
-
-                    if (CurrentPosition.X < 0)
-                        CurrentPosition = new Position(Width, CurrentPosition.Y);
-
-                    break;
-
-                case Direction.W:
-                    CurrentPosition = CurrentPosition.IncreaseOneStepOnXAxes();
-
-                    if (CurrentPosition.X > Width)
-                        CurrentPosition = new Position(0, CurrentPosition.Y);
-
-                    break;
-            }
-        }
-
         internal void MoveForwards()
         {
             switch (CurrentDirection)
             {
                 case Direction.N:
-                    CurrentPosition = CurrentPosition.IncreaseOneStepOnYAxes();
-
-                    if (CurrentPosition.Y > Height)
-                        CurrentPosition = new Position(CurrentPosition.X, 0);
-
+                    CurrentPosition = positionTranslator.MoveOneStepForwardOnYAxes(CurrentPosition);
                     break;
 
                 case Direction.S:
-                    CurrentPosition = CurrentPosition.DecreaseOneStepOnYAxes();
-
-                    if (CurrentPosition.Y < 0)
-                        CurrentPosition = new Position(CurrentPosition.X, Height);
-
+                    CurrentPosition = positionTranslator.MoveOneStepBackOnYAxes(CurrentPosition);
                     break;
 
                 case Direction.E:
-                    CurrentPosition = CurrentPosition.IncreaseOneStepOnXAxes();
-                    if (CurrentPosition.X > Width)
-                        CurrentPosition = new Position(0, CurrentPosition.Y);
-
+                    CurrentPosition = positionTranslator.MoveOneStepForwardOnXAxes(CurrentPosition);
                     break;
 
                 case Direction.W:
-                    CurrentPosition = CurrentPosition.DecreaseOneStepOnXAxes();
-
-                    if (CurrentPosition.X < 0)
-                        CurrentPosition = new Position(Width, CurrentPosition.Y);
-
+                    CurrentPosition = positionTranslator.MoveOneStepBackwardsOnXAxes(CurrentPosition);
                     break;
+            }
+        }
+
+        internal void MoveBackwards()
+        {
+            switch (CurrentDirection)
+            {
+                case Direction.N:
+                    CurrentPosition = positionTranslator.MoveOneStepBackOnYAxes(CurrentPosition);
+                    break;
+
+                case Direction.S:
+                    CurrentPosition = positionTranslator.MoveOneStepForwardOnYAxes(CurrentPosition);
+                    break;
+
+                case Direction.E:
+                    CurrentPosition = positionTranslator.MoveOneStepBackwardsOnXAxes(CurrentPosition);
+                    break;
+
+                case Direction.W:
+                    CurrentPosition = positionTranslator.MoveOneStepForwardOnXAxes(CurrentPosition);
+                    break;
+            }
+        }
+
+        private class PositionTranslator
+        {
+            private readonly int areaWidth;
+            private readonly int areaHeight;
+
+            public PositionTranslator(int areaWidth, int areaHeight)
+            {
+                this.areaWidth = areaWidth;
+                this.areaHeight = areaHeight;
+            }
+
+            internal Position MoveOneStepForwardOnXAxes(Position currentPosition)
+            {
+                Position newPosition;
+                newPosition = currentPosition.IncreaseOneStepOnXAxes();
+                if (newPosition.X > areaWidth)
+                    newPosition = ResetXCoordinateTo(0, currentPosition);
+                return newPosition;
+            }
+
+            internal Position MoveOneStepForwardOnYAxes(Position currentPosition)
+            {
+                Position newPosition;
+                newPosition = currentPosition.IncreaseOneStepOnYAxes();
+
+                if (newPosition.Y > areaHeight)
+                    newPosition = ResetYCoordinateTo(0, currentPosition);
+                return newPosition;
+            }
+
+            internal Position MoveOneStepBackwardsOnXAxes(Position currentPosition)
+            {
+                Position newPosition;
+                newPosition = currentPosition.DecreaseOneStepOnXAxes();
+
+                if (newPosition.X < 0)
+                    newPosition = ResetXCoordinateTo(areaWidth, currentPosition);
+
+                return newPosition;
+            }
+
+            internal Position MoveOneStepBackOnYAxes(Position currentPosition)
+            {
+                Position newPosition;
+                newPosition = currentPosition.DecreaseOneStepOnYAxes();
+
+                if (newPosition.Y < 0)
+                    newPosition = ResetYCoordinateTo(areaHeight, currentPosition);
+                return newPosition;
+            }
+
+            private Position ResetXCoordinateTo(int newXCoordinate, Position CurrentPosition)
+            {
+                return new Position(newXCoordinate, CurrentPosition.Y);
+            }
+
+            private Position ResetYCoordinateTo(int newYCoordinate, Position CurrentPosition)
+            {
+                return new Position(CurrentPosition.X, newYCoordinate);
             }
         }
     }
