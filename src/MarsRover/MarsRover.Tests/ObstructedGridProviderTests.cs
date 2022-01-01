@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using MarsRover.App.Location;
+using MarsRover.App.Obstructions;
+using System.Collections.Generic;
 using Xunit;
 
-namespace MarsRover.App
+namespace MarsRover.Tests
 {
     public class ObstructedGridProviderTests
     {
-
         [Fact]
         internal void WhenCreated_TakesDimensionsAndCreatesRandomBlockedPositions()
         {
@@ -23,8 +24,6 @@ namespace MarsRover.App
                 Assert.InRange(obstructedPosition.X, 1, areaWidth);
                 Assert.InRange(obstructedPosition.Y, 1, areaHeight);
             }
-
         }
-
     }
 }

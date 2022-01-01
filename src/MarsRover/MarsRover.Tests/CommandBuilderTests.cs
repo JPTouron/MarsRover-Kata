@@ -1,6 +1,7 @@
-﻿using Xunit;
+﻿using MarsRover.App.RoverIO;
+using Xunit;
 
-namespace MarsRover.App
+namespace MarsRover.Tests
 {
     public class CommandBuilderTests
     {

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace MarsRover.App
+namespace MarsRover.App.RoverIO
 {
     internal class CommandBuilder
     {

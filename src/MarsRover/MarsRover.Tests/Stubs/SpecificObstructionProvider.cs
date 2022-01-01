@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using MarsRover.App.Location;
+using MarsRover.App.Location.Dependencies;
+using System.Collections.Generic;
 
-namespace MarsRover.App
+namespace MarsRover.Tests.Stubs
 {
     internal class SpecificObstructionProvider : IObstacleProvider
     {

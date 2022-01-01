@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MarsRover.App
+namespace MarsRover.App.Location
 {
     internal class Position : IEquatable<Position>
     {

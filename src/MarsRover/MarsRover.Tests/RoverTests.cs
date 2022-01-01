@@ -1,12 +1,16 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using MarsRover.App;
+using MarsRover.App.Location;
+using MarsRover.App.RoverIO;
+using MarsRover.Tests.Stubs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-using static MarsRover.App.Grid;
+using static MarsRover.App.Location.Grid;
 
-namespace MarsRover.App
+namespace MarsRover.Tests
 {
     public class RoverTests
     {
@@ -68,11 +72,9 @@ namespace MarsRover.App
             Assert.Equal(expectedCoordinate, actualCoordinate);
         }
 
-
         [Fact]
         public void WhenMovingIntoAnObstructedPosition_ThenOutputsProperFormatAndDoesNoteExecuteFurtherCommands()
         {
-
             var r = new Rover(new Grid(5, 5, new SpecificObstructionProvider(new Position(2, 3))));
 
             var commandsExecutedUntilBlockage = "RFFLFF";
@@ -80,18 +82,10 @@ namespace MarsRover.App
             var expectedEndPosition = new Position(2, 2);
             var expectedOutput = new RoverOutput(Direction.N.ToString()[0], expectedEndPosition, true);
 
-
             var actualOutput = r.Execute($"{commandsExecutedUntilBlockage }{commandsNonExecutedAfterBlockage}");
-
-
 
             Assert.Equal(expectedOutput.ToString(), actualOutput.ToString());
             Assert.Equal(expectedOutput, actualOutput);
-
-
-
-
-
         }
 
         private static class TestDataProvider

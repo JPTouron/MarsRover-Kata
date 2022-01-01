@@ -1,14 +1,14 @@
-﻿using System;
+﻿using MarsRover.App.Location.Dependencies;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MarsRover.App
+namespace MarsRover.App.Location
 {
     internal class Grid
     {
         private PositionTranslator positionTranslator;
 
-        //will take in an IObstacleProvider, which gets dimensions and can tell if an obstacle is at a determined position
         public Grid(int width, int height, IObstacleProvider obstacleProvider)
         {
             if (width <= 0 && height <= 0 || height < 0 || width < 0)

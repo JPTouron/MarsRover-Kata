@@ -1,6 +1,7 @@
-﻿using System;
+﻿using MarsRover.App.Location;
+using System;
 
-namespace MarsRover.App
+namespace MarsRover.App.RoverIO
 {
     internal class RoverOutput : IEquatable<RoverOutput>
 
@@ -22,7 +23,7 @@ namespace MarsRover.App
 
             return isOtherNotNull &&
                    Direction == other?.Direction &&
-                   Position.Equals(  other.Position) &&
+                   Position.Equals(other.Position) &&
                    IsNextPositionInTheDirectionBlocked == other.IsNextPositionInTheDirectionBlocked;
         }
 

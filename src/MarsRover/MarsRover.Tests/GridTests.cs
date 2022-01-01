@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MarsRover.App.Location;
+using MarsRover.Tests.Stubs;
+using System;
 using System.Collections.Generic;
 using Xunit;
-using static MarsRover.App.Grid;
+using static MarsRover.App.Location.Grid;
 
-namespace MarsRover.App
+namespace MarsRover.Tests
 {
-
     public class GridTests
     {
         [Fact]
@@ -19,6 +20,22 @@ namespace MarsRover.App
             Assert.Equal(pos.X, expectedCoordinates);
             Assert.Equal(pos.Y, expectedCoordinates);
             Assert.Equal(grid.CurrentDirection, expectedDirection);
+        }
+
+        [Fact]
+        public void WhenObstructionsLoaded_ThenCannotMoveIntoObstructedPositionAndReturnsBlockedStatusAsResult()
+        {
+            var g = new Grid(4, 4, new SpecificObstructionProvider(new Position(2, 0)));
+            var expectedFirstMoveResult = false;
+            var expectedSecondMoveResult = true;
+
+            g.TurnRight();
+            var actualFirstMoveResult = g.MoveForwards();
+            var actualSecondMoveResult = g.MoveForwards();
+
+            Assert.Equal(new Position(1, 0), g.CurrentPosition);
+            Assert.Equal(expectedFirstMoveResult, actualFirstMoveResult);
+            Assert.Equal(expectedSecondMoveResult, actualSecondMoveResult);
         }
 
         [Theory]
@@ -88,25 +105,6 @@ namespace MarsRover.App
             Assert.Equal(expectedResultingDirection, grid.CurrentDirection);
             Assert.Equal(expectedResultingPosition, grid.CurrentPosition);
         }
-
-        [Fact]
-        public void WhenObstructionsLoaded_ThenCannotMoveIntoObstructedPositionAndReturnsBlockedStatusAsResult() {
-
-            var g = new Grid(4, 4, new SpecificObstructionProvider(new Position(2, 0)));
-            var expectedFirstMoveResult = false;
-            var expectedSecondMoveResult = true;
-
-            g.TurnRight();
-            var actualFirstMoveResult= g.MoveForwards();
-            var actualSecondMoveResult= g.MoveForwards();
-
-
-            Assert.Equal(new Position(1, 0), g.CurrentPosition);
-            Assert.Equal(expectedFirstMoveResult, actualFirstMoveResult);
-            Assert.Equal(expectedSecondMoveResult, actualSecondMoveResult);
-
-        }
-
 
         public static class MovementCombinationTests
         {

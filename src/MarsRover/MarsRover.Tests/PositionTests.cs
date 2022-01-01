@@ -1,7 +1,8 @@
 ﻿using AutoFixture;
+using MarsRover.App.Location;
 using Xunit;
 
-namespace MarsRover.App
+namespace MarsRover.Tests
 {
     public class PositionTests
     {

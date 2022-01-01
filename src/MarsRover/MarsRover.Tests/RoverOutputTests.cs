@@ -1,7 +1,9 @@
 ﻿using AutoFixture;
+using MarsRover.App.Location;
+using MarsRover.App.RoverIO;
 using Xunit;
 
-namespace MarsRover.App
+namespace MarsRover.Tests
 {
     public class RoverOutputTests
     {
@@ -17,29 +19,23 @@ namespace MarsRover.App
         }
 
         [Fact]
-        public void WhenTwoOutputsContainSameProperties_ThenTheyAreEqual() {
-
+        public void WhenTwoOutputsContainSameProperties_ThenTheyAreEqual()
+        {
             var fix = new Fixture();
-            var output1 =  fix.Create<RoverOutput>();
-            var output2 =  new RoverOutput(output1.Direction, output1.Position, output1.IsNextPositionInTheDirectionBlocked);
-
+            var output1 = fix.Create<RoverOutput>();
+            var output2 = new RoverOutput(output1.Direction, output1.Position, output1.IsNextPositionInTheDirectionBlocked);
 
             Assert.Equal(output1, output2);
-            
-
         }
+
         [Fact]
         public void WhenTwoOutputsDoNotContainSameProperties_ThenTheyAreDifferent()
         {
-
             var fix = new Fixture();
             var output1 = fix.Create<RoverOutput>();
             var output2 = new RoverOutput(output1.Direction, output1.Position, !output1.IsNextPositionInTheDirectionBlocked);
 
-
             Assert.NotEqual(output1, output2);
-
-
         }
     }
 }
