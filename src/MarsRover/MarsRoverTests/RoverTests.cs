@@ -27,7 +27,7 @@ namespace MarsRover.App
         [InlineData("RRRR", 'N')]
         public void WhenCommandToTurnIsInput_ThenTheRoverReturnsNewDirection(string commands, char expectedDirection)
         {
-            var r = new Rover(new Grid(1,1));
+            var r = new Rover(new Grid(1, 1));
 
             var output = r.Execute(commands);
             var actualDirection = output.Direction;
@@ -64,14 +64,14 @@ namespace MarsRover.App
             var actualCoordinate = output.Position;
 
             Assert.Equal(expectedDirection, actualDirection);
-            Assert.Equal( expectedCoordinate, actualCoordinate);
+            Assert.Equal(expectedCoordinate, actualCoordinate);
         }
 
         private static class TestDataProvider
         {
             public static IEnumerable<object> GetInvalidCommand()
             {
-                var validCommands = new List<char> { 'L', 'R', 'M' };
+                var validCommands = new List<char> { 'L', 'R', 'F', 'B' };
 
                 return new List<object[]> { new object[] { RandomCharacter(validCommands) } };
             }
