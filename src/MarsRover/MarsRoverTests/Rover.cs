@@ -11,11 +11,6 @@ namespace MarsRover.App
             this.grid = grid;
         }
 
-        private enum Direction
-        {
-            N, E, S, W
-        }
-
         internal RoverOutput Execute(string commands)
         {
             foreach (var command in commands)
