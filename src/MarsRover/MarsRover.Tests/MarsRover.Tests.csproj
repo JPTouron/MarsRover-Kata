@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MarsRover.App\MarsRover.App.csproj" />
+  </ItemGroup>
+
 </Project>
