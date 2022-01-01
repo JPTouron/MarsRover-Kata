@@ -4,13 +4,11 @@ namespace MarsRover.App
 {
     internal class Rover
     {
-        private Direction currentDirection;
-        private Position currentPosition;
+        private readonly Grid grid;
 
-        public Rover()
+        public Rover(Grid grid)
         {
-            currentDirection = Direction.N;
-            currentPosition = new Position(0, 0);
+            this.grid = grid;
         }
 
         private enum Direction
@@ -25,19 +23,19 @@ namespace MarsRover.App
                 switch (command)
                 {
                     case 'L':
-                        TurnLeft();
+                        grid.TurnLeft();
                         break;
 
                     case 'R':
-                        TurnRight();
+                        grid.TurnRight();
                         break;
 
                     case 'F':
-                        moveForwards();
+                        grid.MoveForwards();
                         break;
 
                     case 'B':
-                        moveBackwards();
+                        grid.MoveBackwards();
                         break;
 
                     default:
@@ -45,60 +43,12 @@ namespace MarsRover.App
                 }
             }
 
-            return new RoverOutput(CurrentDirectionAsChar(), currentPosition, isNextPositionInTheDirectionBlocked: false);
+            return new RoverOutput(CurrentDirectionAsChar(), grid.CurrentPosition, isNextPositionInTheDirectionBlocked: false);
         }
 
         private char CurrentDirectionAsChar()
         {
-            return currentDirection.ToString()[0];
-        }
-
-        private void moveBackwards()
-        {
-            switch (currentDirection)
-            {
-                case Direction.N:
-                case Direction.S:
-                    currentPosition = currentPosition.DecreaseOneStepOnYAxes();
-                    break;
-
-                case Direction.E:
-                case Direction.W:
-                    currentPosition = currentPosition.DecreaseOneStepOnYAxes();
-                    break;
-            }
-        }
-
-        private void moveForwards()
-        {
-            switch (currentDirection)
-            {
-                case Direction.N:
-                case Direction.S:
-                    currentPosition = currentPosition.IncreaseOneStepOnYAxes();
-                    break;
-
-                case Direction.E:
-                case Direction.W:
-                    currentPosition = currentPosition.IncreaseOneStepOnXAxes();
-                    break;
-            }
-        }
-
-        private void TurnRight()
-        {
-            if (currentDirection == Direction.W)
-                currentDirection = Direction.N;
-            else
-                currentDirection++;
-        }
-
-        private void TurnLeft()
-        {
-            if (currentDirection == Direction.N)
-                currentDirection = Direction.W;
-            else
-                currentDirection--;
+            return grid.CurrentDirection.ToString()[0];
         }
     }
 }

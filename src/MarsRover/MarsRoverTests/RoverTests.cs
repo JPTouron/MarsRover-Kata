@@ -27,7 +27,7 @@ namespace MarsRover.App
         [InlineData("RRRR", 'N')]
         public void WhenCommandToTurnIsInput_ThenTheRoverReturnsNewDirection(string commands, char expectedDirection)
         {
-            var r = new Rover();
+            var r = new Rover(new Grid(1,1));
 
             var output = r.Execute(commands);
             var actualDirection = output.Direction;
@@ -39,7 +39,7 @@ namespace MarsRover.App
         [MemberData(nameof(TestDataProvider.GetInvalidCommand), MemberType = typeof(TestDataProvider))]
         public void WhenCommandInvalidCommandIsInput_ThenArgumentExceptionThrown(char command)
         {
-            var r = new Rover();
+            var r = new Rover(new Grid(1, 1));
 
             Assert.Throws<ArgumentException>(() => r.Execute(command.ToString()));
         }
@@ -48,23 +48,23 @@ namespace MarsRover.App
         [InlineData("F", 0, 1)]
         [InlineData("FF", 0, 2)]
         [InlineData("FFF", 0, 3)]
-        [InlineData("B", 0, -1)]
-        [InlineData("BB", 0, -2)]
-        [InlineData("BBB", 0, -3)]
-        [InlineData("FBBBFBB", 0, -3)]
+        [InlineData("B", 0, 10)]
+        [InlineData("BB", 0, 9)]
+        [InlineData("BBB", 0, 8)]
+        [InlineData("FBBBFBB", 0, 8)]
         public void WhenCommandToMoveBackOrForwardIsInput_ThenTheRoverChangesCoordinate(string commands, int expectedXCoord, int expectedYCoord)
         {
             var expectedCoordinate = new Position(expectedXCoord, expectedYCoord);
             char expectedDirection = 'N';
 
-            var r = new Rover();
+            var r = new Rover(new Grid(10, 10));
 
             var output = r.Execute(commands);
             var actualDirection = output.Direction;
             var actualCoordinate = output.Position;
 
             Assert.Equal(expectedDirection, actualDirection);
-            Assert.Equal(actualCoordinate, expectedCoordinate);
+            Assert.Equal( expectedCoordinate, actualCoordinate);
         }
 
         private static class TestDataProvider
