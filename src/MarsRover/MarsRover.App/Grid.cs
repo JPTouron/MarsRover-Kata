@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MarsRover.App
 {
@@ -6,8 +8,8 @@ namespace MarsRover.App
     {
         private PositionTranslator positionTranslator;
 
-        //will take in an IObstacleProvider, which provides dimensions and can tell if an obstacle is at a determined position
-        public Grid(int width, int height)
+        //will take in an IObstacleProvider, which gets dimensions and can tell if an obstacle is at a determined position
+        public Grid(int width, int height, IObstacleProvider obstacleProvider)
         {
             if (width <= 0 && height <= 0 || height < 0 || width < 0)
             {
@@ -20,7 +22,7 @@ namespace MarsRover.App
             CurrentDirection = Direction.N;
             CurrentPosition = new Position(0, 0);
 
-            positionTranslator = new PositionTranslator(width, height);
+            positionTranslator = new PositionTranslator(width, height, obstacleProvider);
         }
 
         //Refactor: Possible refactor, extracing knowledge of the direction from the grid, would allow to have different types of rotations and directions (ie: a more fine grained rotation)
@@ -54,91 +56,151 @@ namespace MarsRover.App
                 CurrentDirection--;
         }
 
-        internal void MoveForwards()
+        internal bool MoveForwards()
         {
+            MovePositionResult result = new MovePositionResult { ValidPosition = new Position(0, 0), MoveWasBlocked = false };
             switch (CurrentDirection)
             {
                 case Direction.N:
-                    CurrentPosition = positionTranslator.MoveOneStepForwardOnYAxes(CurrentPosition);
+                    result = positionTranslator.MoveOneStepForwardOnYAxes(CurrentPosition);
                     break;
 
                 case Direction.S:
-                    CurrentPosition = positionTranslator.MoveOneStepBackOnYAxes(CurrentPosition);
+                    result = positionTranslator.MoveOneStepBackOnYAxes(CurrentPosition);
                     break;
 
                 case Direction.E:
-                    CurrentPosition = positionTranslator.MoveOneStepForwardOnXAxes(CurrentPosition);
+                    result = positionTranslator.MoveOneStepForwardOnXAxes(CurrentPosition);
                     break;
 
                 case Direction.W:
-                    CurrentPosition = positionTranslator.MoveOneStepBackwardsOnXAxes(CurrentPosition);
+                    result = positionTranslator.MoveOneStepBackwardsOnXAxes(CurrentPosition);
                     break;
             }
+
+            CurrentPosition = result.ValidPosition;
+
+            return result.MoveWasBlocked;
         }
 
-        internal void MoveBackwards()
+        internal bool MoveBackwards()
         {
+            MovePositionResult result = new MovePositionResult { ValidPosition = new Position(0, 0), MoveWasBlocked = false };
+
             switch (CurrentDirection)
             {
                 case Direction.N:
-                    CurrentPosition = positionTranslator.MoveOneStepBackOnYAxes(CurrentPosition);
+                    result = positionTranslator.MoveOneStepBackOnYAxes(CurrentPosition);
                     break;
 
                 case Direction.S:
-                    CurrentPosition = positionTranslator.MoveOneStepForwardOnYAxes(CurrentPosition);
+                    result = positionTranslator.MoveOneStepForwardOnYAxes(CurrentPosition);
                     break;
 
                 case Direction.E:
-                    CurrentPosition = positionTranslator.MoveOneStepBackwardsOnXAxes(CurrentPosition);
+                    result = positionTranslator.MoveOneStepBackwardsOnXAxes(CurrentPosition);
                     break;
 
                 case Direction.W:
-                    CurrentPosition = positionTranslator.MoveOneStepForwardOnXAxes(CurrentPosition);
+                    result = positionTranslator.MoveOneStepForwardOnXAxes(CurrentPosition);
                     break;
             }
+            CurrentPosition = result.ValidPosition;
+
+            return result.MoveWasBlocked;
+        }
+
+        private class MovePositionResult
+        {
+            public Position? ValidPosition = null;
+            public bool MoveWasBlocked;
         }
 
         private class PositionTranslator
         {
             private readonly int areaWidth;
             private readonly int areaHeight;
+            private readonly IReadOnlyCollection<Position> obstructions;
 
-            public PositionTranslator(int areaWidth, int areaHeight)
+            public PositionTranslator(int areaWidth, int areaHeight, IObstacleProvider obstacleProvider)
             {
                 this.areaWidth = areaWidth;
                 this.areaHeight = areaHeight;
+                obstructions = obstacleProvider.GetObstructions();
             }
 
-            internal Position MoveOneStepForwardOnXAxes(Position currentPosition)
+            internal MovePositionResult MoveOneStepForwardOnXAxes(Position currentPosition)
             {
+                Position newPosition;
+
                 if (currentPosition.NextXCoordinate > areaWidth)
-                    return ResetXCoordinateTo(0, currentPosition);
+                    newPosition = ResetXCoordinateTo(0, currentPosition);
                 else
-                    return currentPosition.IncreaseOneStepOnXAxes();
+                    newPosition = currentPosition.IncreaseOneStepOnXAxes();
+
+                var wasBlocked = IsNextPositionBlocked(newPosition);
+                if (wasBlocked)
+                {
+                    newPosition = currentPosition;
+                }
+
+                return new MovePositionResult { ValidPosition = newPosition, MoveWasBlocked = wasBlocked };
             }
 
-            internal Position MoveOneStepForwardOnYAxes(Position currentPosition)
+            internal MovePositionResult MoveOneStepForwardOnYAxes(Position currentPosition)
             {
+                Position newPosition;
                 if (currentPosition.NextYCoordinate > areaHeight)
-                    return ResetYCoordinateTo(0, currentPosition);
+                    newPosition = ResetYCoordinateTo(0, currentPosition);
                 else
-                    return currentPosition.IncreaseOneStepOnYAxes();
+                    newPosition = currentPosition.IncreaseOneStepOnYAxes();
+
+                var wasBlocked = IsNextPositionBlocked(newPosition);
+                if (wasBlocked)
+                {
+                    newPosition = currentPosition;
+                }
+
+                return new MovePositionResult { ValidPosition = newPosition, MoveWasBlocked = wasBlocked };
             }
 
-            internal Position MoveOneStepBackwardsOnXAxes(Position currentPosition)
+            internal MovePositionResult MoveOneStepBackwardsOnXAxes(Position currentPosition)
             {
+                Position newPosition;
                 if (currentPosition.PreviousXCoordinate < 0)
-                    return ResetXCoordinateTo(areaWidth, currentPosition);
+                    newPosition = ResetXCoordinateTo(areaWidth, currentPosition);
                 else
-                    return currentPosition.DecreaseOneStepOnXAxes();
+                    newPosition = currentPosition.DecreaseOneStepOnXAxes();
+
+                var wasBlocked = IsNextPositionBlocked(newPosition);
+                if (wasBlocked)
+                {
+                    newPosition = currentPosition;
+                }
+
+                return new MovePositionResult { ValidPosition = newPosition, MoveWasBlocked = wasBlocked };
             }
 
-            internal Position MoveOneStepBackOnYAxes(Position currentPosition)
+            internal MovePositionResult MoveOneStepBackOnYAxes(Position currentPosition)
             {
+                Position newPosition;
                 if (currentPosition.PreviousYCoordinate < 0)
-                    return ResetYCoordinateTo(areaHeight, currentPosition);
+                    newPosition = ResetYCoordinateTo(areaHeight, currentPosition);
                 else
-                    return currentPosition.DecreaseOneStepOnYAxes();
+                    newPosition = currentPosition.DecreaseOneStepOnYAxes();
+
+                var wasBlocked = IsNextPositionBlocked(newPosition);
+                if (wasBlocked)
+                {
+                    newPosition = currentPosition;
+                }
+
+                return new MovePositionResult { ValidPosition = newPosition, MoveWasBlocked = wasBlocked };
+            }
+
+            private bool IsNextPositionBlocked(Position newPosition)
+            {
+                return obstructions.Contains(newPosition);
             }
 
             private Position ResetXCoordinateTo(int newXCoordinate, Position CurrentPosition)

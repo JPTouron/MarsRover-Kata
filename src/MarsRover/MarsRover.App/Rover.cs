@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MarsRover.App
 {
@@ -13,8 +14,13 @@ namespace MarsRover.App
 
         internal RoverOutput Execute(string commands)
         {
-            foreach (var command in commands)
+            var isNextPositionInTheDirectionBlocked = false;
+            var commandsToProcess = new Queue<char>(commands);
+
+            while (isNextPositionInTheDirectionBlocked == false && commandsToProcess.Count > 0)
             {
+                var command = commandsToProcess.Dequeue();
+
                 switch (command)
                 {
                     case 'L':
@@ -26,11 +32,11 @@ namespace MarsRover.App
                         break;
 
                     case 'F':
-                        grid.MoveForwards();
+                        isNextPositionInTheDirectionBlocked = grid.MoveForwards();
                         break;
 
                     case 'B':
-                        grid.MoveBackwards();
+                        isNextPositionInTheDirectionBlocked = grid.MoveBackwards();
                         break;
 
                     default:
@@ -38,7 +44,7 @@ namespace MarsRover.App
                 }
             }
 
-            return new RoverOutput(CurrentDirectionAsChar(), grid.CurrentPosition, isNextPositionInTheDirectionBlocked: false);
+            return new RoverOutput(CurrentDirectionAsChar(), grid.CurrentPosition, isNextPositionInTheDirectionBlocked);
         }
 
         private char CurrentDirectionAsChar()

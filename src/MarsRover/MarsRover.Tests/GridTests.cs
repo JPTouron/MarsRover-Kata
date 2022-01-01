@@ -5,12 +5,13 @@ using static MarsRover.App.Grid;
 
 namespace MarsRover.App
 {
+
     public class GridTests
     {
         [Fact]
         public void WhenCreated_GridInitializesAtPositionZeroAndDirectionN()
         {
-            var grid = new Grid(1, 1);
+            var grid = new Grid(1, 1, new NoObstructionProvider());
             var expectedCoordinates = 0;
             var expectedDirection = Direction.N;
             var pos = grid.CurrentPosition;
@@ -28,13 +29,13 @@ namespace MarsRover.App
         [InlineData(1, 0, false)]
         [InlineData(0, 1, false)]
         [InlineData(10, 10, false)]
-        public void WhenCreated_DimensionsHaveToBeAMinimumOfOneForHeightOrWidthOrElseItThrowsException(int width, int height, bool expectedToThrow)
+        internal void WhenCreated_DimensionsHaveToBeAMinimumOfOneForHeightOrWidthOrElseItThrowsException(int width, int height, bool expectedToThrow)
         {
             if (expectedToThrow)
-                Assert.Throws<ArgumentOutOfRangeException>(() => new Grid(width, height));
+                Assert.Throws<ArgumentOutOfRangeException>(() => new Grid(width, height, new NoObstructionProvider()));
             else
             {
-                var grid = new Grid(width, height);
+                var grid = new Grid(width, height, new NoObstructionProvider());
                 Assert.NotNull(grid);
                 Assert.Equal(0, grid.CurrentPosition.X);
                 Assert.Equal(0, grid.CurrentPosition.Y);
@@ -60,7 +61,7 @@ namespace MarsRover.App
         {
             var expectedResultingPosition = new Position(xCoordinate, yCoordinate);
 
-            var grid = new Grid(gridWidth, gridHeight);
+            var grid = new Grid(gridWidth, gridHeight, new NoObstructionProvider());
 
             foreach (char command in movementsAndTurns)
             {
@@ -87,6 +88,25 @@ namespace MarsRover.App
             Assert.Equal(expectedResultingDirection, grid.CurrentDirection);
             Assert.Equal(expectedResultingPosition, grid.CurrentPosition);
         }
+
+        [Fact]
+        public void WhenObstructionsLoaded_ThenCannotMoveIntoObstructedPositionAndReturnsBlockedStatusAsResult() {
+
+            var g = new Grid(4, 4, new SpecificObstructionProvider(new Position(2, 0)));
+            var expectedFirstMoveResult = false;
+            var expectedSecondMoveResult = true;
+
+            g.TurnRight();
+            var actualFirstMoveResult= g.MoveForwards();
+            var actualSecondMoveResult= g.MoveForwards();
+
+
+            Assert.Equal(new Position(1, 0), g.CurrentPosition);
+            Assert.Equal(expectedFirstMoveResult, actualFirstMoveResult);
+            Assert.Equal(expectedSecondMoveResult, actualSecondMoveResult);
+
+        }
+
 
         public static class MovementCombinationTests
         {

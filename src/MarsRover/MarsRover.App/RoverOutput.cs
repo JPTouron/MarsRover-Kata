@@ -1,6 +1,9 @@
-﻿namespace MarsRover.App
+﻿using System;
+
+namespace MarsRover.App
 {
-    internal class RoverOutput
+    internal class RoverOutput : IEquatable<RoverOutput>
+
     {
         public readonly char Direction;
         public readonly Position Position;
@@ -11,6 +14,16 @@
             Direction = direction;
             Position = position;
             IsNextPositionInTheDirectionBlocked = isNextPositionInTheDirectionBlocked;
+        }
+
+        public bool Equals(RoverOutput? other)
+        {
+            var isOtherNotNull = other != null;
+
+            return isOtherNotNull &&
+                   Direction == other?.Direction &&
+                   Position.Equals(  other.Position) &&
+                   IsNextPositionInTheDirectionBlocked == other.IsNextPositionInTheDirectionBlocked;
         }
 
         public override string ToString()

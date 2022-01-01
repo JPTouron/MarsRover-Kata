@@ -4,5 +4,6 @@
 using System;
 
 Console.WriteLine("Hello, World!");
+Console.WriteLine("Input the commands and hit enter");
 
 

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
+using static MarsRover.App.Grid;
 
 namespace MarsRover.App
 {
@@ -27,7 +28,7 @@ namespace MarsRover.App
         [InlineData("RRRR", 'N')]
         public void WhenCommandToTurnIsInput_ThenTheRoverReturnsNewDirection(string commands, char expectedDirection)
         {
-            var r = new Rover(new Grid(1, 1));
+            var r = new Rover(new Grid(1, 1, new NoObstructionProvider()));
 
             var output = r.Execute(commands);
             var actualDirection = output.Direction;
@@ -39,7 +40,7 @@ namespace MarsRover.App
         [MemberData(nameof(TestDataProvider.GetInvalidCommand), MemberType = typeof(TestDataProvider))]
         public void WhenCommandInvalidCommandIsInput_ThenArgumentExceptionThrown(char command)
         {
-            var r = new Rover(new Grid(1, 1));
+            var r = new Rover(new Grid(1, 1, new NoObstructionProvider()));
 
             Assert.Throws<ArgumentException>(() => r.Execute(command.ToString()));
         }
@@ -57,7 +58,7 @@ namespace MarsRover.App
             var expectedCoordinate = new Position(expectedXCoord, expectedYCoord);
             char expectedDirection = 'N';
 
-            var r = new Rover(new Grid(10, 10));
+            var r = new Rover(new Grid(10, 10, new NoObstructionProvider()));
 
             var output = r.Execute(commands);
             var actualDirection = output.Direction;
@@ -65,6 +66,32 @@ namespace MarsRover.App
 
             Assert.Equal(expectedDirection, actualDirection);
             Assert.Equal(expectedCoordinate, actualCoordinate);
+        }
+
+
+        [Fact]
+        public void WhenMovingIntoAnObstructedPosition_ThenOutputsProperFormatAndDoesNoteExecuteFurtherCommands()
+        {
+
+            var r = new Rover(new Grid(5, 5, new SpecificObstructionProvider(new Position(2, 3))));
+
+            var commandsExecutedUntilBlockage = "RFFLFF";
+            var commandsNonExecutedAfterBlockage = "FLF";
+            var expectedEndPosition = new Position(2, 2);
+            var expectedOutput = new RoverOutput(Direction.N.ToString()[0], expectedEndPosition, true);
+
+
+            var actualOutput = r.Execute($"{commandsExecutedUntilBlockage }{commandsNonExecutedAfterBlockage}");
+
+
+
+            Assert.Equal(expectedOutput.ToString(), actualOutput.ToString());
+            Assert.Equal(expectedOutput, actualOutput);
+
+
+
+
+
         }
 
         private static class TestDataProvider

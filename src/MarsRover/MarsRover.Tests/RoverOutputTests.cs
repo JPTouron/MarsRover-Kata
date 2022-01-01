@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using AutoFixture;
+using Xunit;
 
 namespace MarsRover.App
 {
@@ -13,6 +14,32 @@ namespace MarsRover.App
         {
             var output = new RoverOutput(direction, new Position(xCoordinate, yCoordinate), isNextPositionInTheDirectionBlocked);
             Assert.Equal(expectedOutput, output.ToString());
+        }
+
+        [Fact]
+        public void WhenTwoOutputsContainSameProperties_ThenTheyAreEqual() {
+
+            var fix = new Fixture();
+            var output1 =  fix.Create<RoverOutput>();
+            var output2 =  new RoverOutput(output1.Direction, output1.Position, output1.IsNextPositionInTheDirectionBlocked);
+
+
+            Assert.Equal(output1, output2);
+            
+
+        }
+        [Fact]
+        public void WhenTwoOutputsDoNotContainSameProperties_ThenTheyAreDifferent()
+        {
+
+            var fix = new Fixture();
+            var output1 = fix.Create<RoverOutput>();
+            var output2 = new RoverOutput(output1.Direction, output1.Position, !output1.IsNextPositionInTheDirectionBlocked);
+
+
+            Assert.NotEqual(output1, output2);
+
+
         }
     }
 }
