@@ -15,8 +15,8 @@ namespace MarsRover.App
         {
             var pos = new Position(xCoord, yCoord);
 
-            Assert.Equal(xCoord, pos.x);
-            Assert.Equal(yCoord, pos.y);
+            Assert.Equal(xCoord, pos.X);
+            Assert.Equal(yCoord, pos.Y);
             Assert.Equal($"{xCoord},{yCoord}", pos.ToString());
         }
 
@@ -30,8 +30,8 @@ namespace MarsRover.App
             var pos = new Position(xCoord, yCoord);
             var newPos = pos.IncreaseOneStepOnYAxes();
 
-            Assert.Equal(newPos.x, expectedXCoord);
-            Assert.Equal(newPos.y, expectedYCoord);
+            Assert.Equal(newPos.X, expectedXCoord);
+            Assert.Equal(newPos.Y, expectedYCoord);
             Assert.NotEqual(pos, newPos);
         }
 
@@ -45,8 +45,8 @@ namespace MarsRover.App
             var pos = new Position(xCoord, yCoord);
             var newPos = pos.DecreaseOneStepOnYAxes();
 
-            Assert.Equal(newPos.x, expectedXCoord);
-            Assert.Equal(newPos.y, expectedYCoord);
+            Assert.Equal(newPos.X, expectedXCoord);
+            Assert.Equal(newPos.Y, expectedYCoord);
             Assert.NotEqual(pos, newPos);
         }
 
@@ -60,8 +60,8 @@ namespace MarsRover.App
             var pos = new Position(xCoord, yCoord);
             var newPos = pos.IncreaseOneStepOnXAxes();
 
-            Assert.Equal(newPos.x, expectedXCoord);
-            Assert.Equal(newPos.y, expectedYCoord);
+            Assert.Equal(newPos.X, expectedXCoord);
+            Assert.Equal(newPos.Y, expectedYCoord);
             Assert.NotEqual(pos, newPos);
         }
 
@@ -75,8 +75,8 @@ namespace MarsRover.App
             var pos = new Position(xCoord, yCoord);
             var newPos = pos.DecreaseOneStepOnXAxes();
 
-            Assert.Equal(newPos.x, expectedXCoord);
-            Assert.Equal(newPos.y, expectedYCoord);
+            Assert.Equal(newPos.X, expectedXCoord);
+            Assert.Equal(newPos.Y, expectedYCoord);
             Assert.NotEqual(pos, newPos);
         }
 
@@ -85,7 +85,7 @@ namespace MarsRover.App
         {
             var fixture = new Fixture();
             var position = fixture.Create<Position>();
-            var position2 = new Position(position.x, position.y);
+            var position2 = new Position(position.X, position.Y);
 
             Assert.Equal(position, position2);
         }
@@ -96,7 +96,7 @@ namespace MarsRover.App
             var fixture = new Fixture();
             var position = fixture.Create<Position>();
             var randomFactor = fixture.Create<int>();
-            var position2 = new Position(position.x * randomFactor, position.y * randomFactor);
+            var position2 = new Position(position.X * randomFactor, position.Y * randomFactor);
 
             Assert.NotEqual(position, position2);
         }

@@ -55,32 +55,32 @@ namespace MarsRover.App
                 case Direction.N:
                     CurrentPosition = CurrentPosition.DecreaseOneStepOnYAxes();
 
-                    if (CurrentPosition.y < 0)
-                        CurrentPosition = new Position(CurrentPosition.x, Height);
+                    if (CurrentPosition.Y < 0)
+                        CurrentPosition = new Position(CurrentPosition.X, Height);
 
                     break;
 
                 case Direction.S:
                     CurrentPosition = CurrentPosition.IncreaseOneStepOnYAxes();
 
-                    if (CurrentPosition.y > Height)
-                        CurrentPosition = new Position(CurrentPosition.x, 0);
+                    if (CurrentPosition.Y > Height)
+                        CurrentPosition = new Position(CurrentPosition.X, 0);
 
                     break;
 
                 case Direction.E:
                     CurrentPosition = CurrentPosition.DecreaseOneStepOnXAxes();
 
-                    if (CurrentPosition.x < 0)
-                        CurrentPosition = new Position(Width, CurrentPosition.y);
+                    if (CurrentPosition.X < 0)
+                        CurrentPosition = new Position(Width, CurrentPosition.Y);
 
                     break;
 
                 case Direction.W:
                     CurrentPosition = CurrentPosition.IncreaseOneStepOnXAxes();
 
-                    if (CurrentPosition.x > Width)
-                        CurrentPosition = new Position(0, CurrentPosition.y);
+                    if (CurrentPosition.X > Width)
+                        CurrentPosition = new Position(0, CurrentPosition.Y);
 
                     break;
             }
@@ -93,31 +93,31 @@ namespace MarsRover.App
                 case Direction.N:
                     CurrentPosition = CurrentPosition.IncreaseOneStepOnYAxes();
 
-                    if (CurrentPosition.y > Height)
-                        CurrentPosition = new Position(CurrentPosition.x, 0);
+                    if (CurrentPosition.Y > Height)
+                        CurrentPosition = new Position(CurrentPosition.X, 0);
 
                     break;
 
                 case Direction.S:
                     CurrentPosition = CurrentPosition.DecreaseOneStepOnYAxes();
 
-                    if (CurrentPosition.y < 0)
-                        CurrentPosition = new Position(CurrentPosition.x, Height);
+                    if (CurrentPosition.Y < 0)
+                        CurrentPosition = new Position(CurrentPosition.X, Height);
 
                     break;
 
                 case Direction.E:
                     CurrentPosition = CurrentPosition.IncreaseOneStepOnXAxes();
-                    if (CurrentPosition.x > Width)
-                        CurrentPosition = new Position(0, CurrentPosition.y);
+                    if (CurrentPosition.X > Width)
+                        CurrentPosition = new Position(0, CurrentPosition.Y);
 
                     break;
 
                 case Direction.W:
                     CurrentPosition = CurrentPosition.DecreaseOneStepOnXAxes();
 
-                    if (CurrentPosition.x < 0)
-                        CurrentPosition = new Position(Width, CurrentPosition.y);
+                    if (CurrentPosition.X < 0)
+                        CurrentPosition = new Position(Width, CurrentPosition.Y);
 
                     break;
             }

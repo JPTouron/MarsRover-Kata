@@ -4,45 +4,45 @@ namespace MarsRover.App
 {
     internal class Position : IEquatable<Position>
     {
-        public readonly int x;
-        public readonly int y;
+        public readonly int X;
+        public readonly int Y;
 
         public Position(int x, int y)
         {
-            this.x = x;
-            this.y = y;
+            X = x;
+            Y = y;
         }
 
         public override string ToString()
         {
-            return $"{x},{y}";
+            return $"{X},{Y}";
         }
 
         public Position IncreaseOneStepOnYAxes()
         {
-            return new Position(x, y + 1);
+            return new Position(X, Y + 1);
         }
 
         public Position IncreaseOneStepOnXAxes()
         {
-            return new Position(x + 1, y);
+            return new Position(X + 1, Y);
         }
 
         public Position DecreaseOneStepOnYAxes()
         {
-            return new Position(x, y - 1);
+            return new Position(X, Y - 1);
         }
 
         public Position DecreaseOneStepOnXAxes()
         {
-            return new Position(x - 1, y);
+            return new Position(X - 1, Y);
         }
 
         public bool Equals(Position? other)
         {
             var isOtherNotNull = other != null;
 
-            return isOtherNotNull && x == other?.x && y == other.y;
+            return isOtherNotNull && X == other?.X && Y == other.Y;
         }
     }
 }

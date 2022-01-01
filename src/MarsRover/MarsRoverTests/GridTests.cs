@@ -15,8 +15,8 @@ namespace MarsRover.App
             var expectedDirection = Direction.N;
             var pos = grid.CurrentPosition;
 
-            Assert.Equal(pos.x, expectedCoordinates);
-            Assert.Equal(pos.y, expectedCoordinates);
+            Assert.Equal(pos.X, expectedCoordinates);
+            Assert.Equal(pos.Y, expectedCoordinates);
             Assert.Equal(grid.CurrentDirection, expectedDirection);
         }
 
@@ -36,8 +36,8 @@ namespace MarsRover.App
             {
                 var grid = new Grid(width, height);
                 Assert.NotNull(grid);
-                Assert.Equal(0, grid.CurrentPosition.x);
-                Assert.Equal(0, grid.CurrentPosition.y);
+                Assert.Equal(0, grid.CurrentPosition.X);
+                Assert.Equal(0, grid.CurrentPosition.Y);
                 Assert.Equal(Direction.N, grid.CurrentDirection);
             }
         }
