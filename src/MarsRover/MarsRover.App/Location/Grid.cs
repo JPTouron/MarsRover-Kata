@@ -1,20 +1,16 @@
 ﻿using MarsRover.App.Location.Dependencies;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MarsRover.App.Location
 {
-    internal class Grid
+    internal partial class Grid
     {
-        private PositionTranslator positionTranslator;
+        private PositionTranslatorOnX positionTranslatorOnX;
+        private PositionTranslatorOnY positionTranslatorOnY;
 
         public Grid(int width, int height, IObstacleProvider obstacleProvider)
         {
-            if (width <= 0 && height <= 0 || height < 0 || width < 0)
-            {
-                throw new ArgumentOutOfRangeException($"Dimensions are incorrect, at least height or width must be greater than zero. Current values are: width:{width},  height:{height}");
-            }
+            ValidateGridDimensionsAreAtLeastSizeOne(width, height);
 
             Width = width;
             Height = height;
@@ -22,7 +18,8 @@ namespace MarsRover.App.Location
             CurrentDirection = Direction.N;
             CurrentPosition = new Position(0, 0);
 
-            positionTranslator = new PositionTranslator(width, height, obstacleProvider);
+            positionTranslatorOnX = new PositionTranslatorOnX(width, height, obstacleProvider);
+            positionTranslatorOnY = new PositionTranslatorOnY(width, height, obstacleProvider);
         }
 
         //Refactor: Possible refactor, extracing knowledge of the direction from the grid, would allow to have different types of rotations and directions (ie: a more fine grained rotation)
@@ -58,23 +55,25 @@ namespace MarsRover.App.Location
 
         internal bool MoveForwards()
         {
-            MovePositionResult result = new MovePositionResult { ValidPosition = new Position(0, 0), MoveWasBlocked = false };
+            MovePositionResult result;
+
             switch (CurrentDirection)
             {
+                default:
                 case Direction.N:
-                    result = positionTranslator.MoveOneStepForwardOnYAxes(CurrentPosition);
+                    result = positionTranslatorOnY.MoveOneStepForward(CurrentPosition);
                     break;
 
                 case Direction.S:
-                    result = positionTranslator.MoveOneStepBackOnYAxes(CurrentPosition);
+                    result = positionTranslatorOnY.MoveOneStepBack(CurrentPosition);
                     break;
 
                 case Direction.E:
-                    result = positionTranslator.MoveOneStepForwardOnXAxes(CurrentPosition);
+                    result = positionTranslatorOnX.MoveOneStepForward(CurrentPosition);
                     break;
 
                 case Direction.W:
-                    result = positionTranslator.MoveOneStepBackwardsOnXAxes(CurrentPosition);
+                    result = positionTranslatorOnX.MoveOneStepBack(CurrentPosition);
                     break;
             }
 
@@ -85,24 +84,25 @@ namespace MarsRover.App.Location
 
         internal bool MoveBackwards()
         {
-            MovePositionResult result = new MovePositionResult { ValidPosition = new Position(0, 0), MoveWasBlocked = false };
+            MovePositionResult result;
 
             switch (CurrentDirection)
             {
+                default:
                 case Direction.N:
-                    result = positionTranslator.MoveOneStepBackOnYAxes(CurrentPosition);
+                    result = positionTranslatorOnY.MoveOneStepBack(CurrentPosition);
                     break;
 
                 case Direction.S:
-                    result = positionTranslator.MoveOneStepForwardOnYAxes(CurrentPosition);
+                    result = positionTranslatorOnY.MoveOneStepForward(CurrentPosition);
                     break;
 
                 case Direction.E:
-                    result = positionTranslator.MoveOneStepBackwardsOnXAxes(CurrentPosition);
+                    result = positionTranslatorOnX.MoveOneStepBack(CurrentPosition);
                     break;
 
                 case Direction.W:
-                    result = positionTranslator.MoveOneStepForwardOnXAxes(CurrentPosition);
+                    result = positionTranslatorOnX.MoveOneStepForward(CurrentPosition);
                     break;
             }
             CurrentPosition = result.ValidPosition;
@@ -110,107 +110,22 @@ namespace MarsRover.App.Location
             return result.MoveWasBlocked;
         }
 
-        private class MovePositionResult
+        private static void ValidateGridDimensionsAreAtLeastSizeOne(int width, int height)
         {
-            public Position? ValidPosition = null;
-            public bool MoveWasBlocked;
+            if (width <= 0 && height <= 0 || height < 0 || width < 0)
+                throw new ArgumentOutOfRangeException($"Dimensions are incorrect, at least height or width must be greater than zero. Current values are: width:{width},  height:{height}");
         }
 
-        private class PositionTranslator
+        private class MovePositionResult
         {
-            private readonly int areaWidth;
-            private readonly int areaHeight;
-            private readonly IReadOnlyCollection<Position> obstructions;
+            public readonly Position ValidPosition;
 
-            public PositionTranslator(int areaWidth, int areaHeight, IObstacleProvider obstacleProvider)
+            public readonly bool MoveWasBlocked;
+
+            public MovePositionResult(Position validPosition, bool moveWasBlocked)
             {
-                this.areaWidth = areaWidth;
-                this.areaHeight = areaHeight;
-                obstructions = obstacleProvider.GetObstructions();
-            }
-
-            internal MovePositionResult MoveOneStepForwardOnXAxes(Position currentPosition)
-            {
-                Position newPosition;
-
-                if (currentPosition.NextXCoordinate > areaWidth)
-                    newPosition = ResetXCoordinateTo(0, currentPosition);
-                else
-                    newPosition = currentPosition.IncreaseOneStepOnXAxes();
-
-                var wasBlocked = IsNextPositionBlocked(newPosition);
-                if (wasBlocked)
-                {
-                    newPosition = currentPosition;
-                }
-
-                return new MovePositionResult { ValidPosition = newPosition, MoveWasBlocked = wasBlocked };
-            }
-
-            internal MovePositionResult MoveOneStepForwardOnYAxes(Position currentPosition)
-            {
-                Position newPosition;
-                if (currentPosition.NextYCoordinate > areaHeight)
-                    newPosition = ResetYCoordinateTo(0, currentPosition);
-                else
-                    newPosition = currentPosition.IncreaseOneStepOnYAxes();
-
-                var wasBlocked = IsNextPositionBlocked(newPosition);
-                if (wasBlocked)
-                {
-                    newPosition = currentPosition;
-                }
-
-                return new MovePositionResult { ValidPosition = newPosition, MoveWasBlocked = wasBlocked };
-            }
-
-            internal MovePositionResult MoveOneStepBackwardsOnXAxes(Position currentPosition)
-            {
-                Position newPosition;
-                if (currentPosition.PreviousXCoordinate < 0)
-                    newPosition = ResetXCoordinateTo(areaWidth, currentPosition);
-                else
-                    newPosition = currentPosition.DecreaseOneStepOnXAxes();
-
-                var wasBlocked = IsNextPositionBlocked(newPosition);
-                if (wasBlocked)
-                {
-                    newPosition = currentPosition;
-                }
-
-                return new MovePositionResult { ValidPosition = newPosition, MoveWasBlocked = wasBlocked };
-            }
-
-            internal MovePositionResult MoveOneStepBackOnYAxes(Position currentPosition)
-            {
-                Position newPosition;
-                if (currentPosition.PreviousYCoordinate < 0)
-                    newPosition = ResetYCoordinateTo(areaHeight, currentPosition);
-                else
-                    newPosition = currentPosition.DecreaseOneStepOnYAxes();
-
-                var wasBlocked = IsNextPositionBlocked(newPosition);
-                if (wasBlocked)
-                {
-                    newPosition = currentPosition;
-                }
-
-                return new MovePositionResult { ValidPosition = newPosition, MoveWasBlocked = wasBlocked };
-            }
-
-            private bool IsNextPositionBlocked(Position newPosition)
-            {
-                return obstructions.Contains(newPosition);
-            }
-
-            private Position ResetXCoordinateTo(int newXCoordinate, Position CurrentPosition)
-            {
-                return new Position(newXCoordinate, CurrentPosition.Y);
-            }
-
-            private Position ResetYCoordinateTo(int newYCoordinate, Position CurrentPosition)
-            {
-                return new Position(CurrentPosition.X, newYCoordinate);
+                ValidPosition = validPosition;
+                MoveWasBlocked = moveWasBlocked;
             }
         }
     }

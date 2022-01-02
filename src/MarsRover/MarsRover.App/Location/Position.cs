@@ -21,6 +21,16 @@ namespace MarsRover.App.Location
 
         public int PreviousYCoordinate => Y - 1;
 
+        public Position SetX(int newXCoord)
+        {
+            return new Position(newXCoord, Y);
+        }
+
+        public Position SetY(int newYCoord)
+        {
+            return new Position(X, newYCoord);
+        }
+
         public override string ToString()
         {
             return $"{X},{Y}";
@@ -31,14 +41,14 @@ namespace MarsRover.App.Location
             return new Position(X, Y + 1);
         }
 
-        public Position IncreaseOneStepOnXAxes()
-        {
-            return new Position(X + 1, Y);
-        }
-
         public Position DecreaseOneStepOnYAxes()
         {
             return new Position(X, Y - 1);
+        }
+
+        public Position IncreaseOneStepOnXAxes()
+        {
+            return new Position(X + 1, Y);
         }
 
         public Position DecreaseOneStepOnXAxes()
