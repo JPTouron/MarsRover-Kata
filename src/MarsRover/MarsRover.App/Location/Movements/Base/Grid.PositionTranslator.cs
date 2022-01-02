@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace MarsRover.App.Location
 {
-    internal partial class Grid
+    public partial class Grid
     {
         private abstract class PositionTranslator
         {

@@ -2,7 +2,7 @@
 
 namespace MarsRover.App.Location.Dependencies
 {
-    internal interface IObstacleProvider
+    public interface IObstacleProvider
     {
         IReadOnlyCollection<Position> GetObstructions();
     }

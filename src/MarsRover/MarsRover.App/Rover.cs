@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MarsRover.App
 {
-    internal class Rover
+    public class Rover
     {
         private readonly Grid grid;
 
@@ -14,7 +14,7 @@ namespace MarsRover.App
             this.grid = grid;
         }
 
-        internal RoverOutput Execute(string commands)
+        public RoverOutput Execute(string commands)
         {
             var isNextPositionInTheDirectionBlocked = false;
             var commandsToProcess = new Queue<char>(commands);
@@ -41,8 +41,6 @@ namespace MarsRover.App
                         isNextPositionInTheDirectionBlocked = grid.MoveBackwards();
                         break;
 
-                    default:
-                        throw new ArgumentException($"Invalid command: {command}");
                 }
             }
 

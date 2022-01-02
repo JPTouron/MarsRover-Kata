@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MarsRover.App.Obstructions
 {
-    internal class ObstructedGridProvider : IObstacleProvider
+    public class ObstructedGridProvider : IObstacleProvider
     {
         private List<Position> obstructions;
 

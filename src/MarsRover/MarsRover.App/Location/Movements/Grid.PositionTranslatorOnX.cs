@@ -2,7 +2,7 @@
 
 namespace MarsRover.App.Location
 {
-    internal partial class Grid
+    public partial class Grid
     {
         private class PositionTranslatorOnX : PositionTranslator
         {

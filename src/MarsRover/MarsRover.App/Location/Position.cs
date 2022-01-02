@@ -2,7 +2,7 @@
 
 namespace MarsRover.App.Location
 {
-    internal class Position : IEquatable<Position>
+    public class Position : IEquatable<Position>
     {
         public readonly int X;
         public readonly int Y;

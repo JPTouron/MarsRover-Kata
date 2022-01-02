@@ -3,7 +3,12 @@ using System;
 
 namespace MarsRover.App.Location
 {
-    internal partial class Grid
+    public enum Direction
+    {
+        N, E, S, W
+    }
+
+    public partial class Grid
     {
         private PositionTranslatorOnX positionTranslatorOnX;
         private PositionTranslatorOnY positionTranslatorOnY;
@@ -24,10 +29,6 @@ namespace MarsRover.App.Location
 
         //Refactor: Possible refactor, extracing knowledge of the direction from the grid, would allow to have different types of rotations and directions (ie: a more fine grained rotation)
         //          this would require to inject this new dependency into the grid, could be simply done, but I'm lazy and is not required
-        internal enum Direction
-        {
-            N, E, S, W
-        }
 
         public Position CurrentPosition { get; internal set; }
 

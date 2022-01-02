@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-using static MarsRover.App.Location.Grid;
 
 namespace MarsRover.Tests
 {
@@ -38,15 +37,6 @@ namespace MarsRover.Tests
             var actualDirection = output.Direction;
 
             Assert.Equal(expectedDirection, actualDirection);
-        }
-
-        [Theory]
-        [MemberData(nameof(TestDataProvider.GetInvalidCommand), MemberType = typeof(TestDataProvider))]
-        public void WhenCommandInvalidCommandIsInput_ThenArgumentExceptionThrown(char command)
-        {
-            var r = new Rover(new Grid(1, 1, new NoObstructionProvider()));
-
-            Assert.Throws<ArgumentException>(() => r.Execute(command.ToString()));
         }
 
         [Theory]

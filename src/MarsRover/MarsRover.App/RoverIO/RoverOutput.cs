@@ -3,7 +3,7 @@ using System;
 
 namespace MarsRover.App.RoverIO
 {
-    internal class RoverOutput : IEquatable<RoverOutput>
+    public class RoverOutput : IEquatable<RoverOutput>
 
     {
         public readonly char Direction;
