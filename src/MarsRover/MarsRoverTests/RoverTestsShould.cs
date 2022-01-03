@@ -1,14 +1,20 @@
+using System.Collections.Generic;
 using Xunit;
 
 namespace MarsRoverTests
 {
     public class RoverTestsShould
     {
+        private Rover r;
+
+        public RoverTestsShould()
+        {
+            r = new Rover();
+        }
+
         [Fact]
         public void BeCreatedWithInitialPosition()
         {
-            var r = new Rover();
-
             var output = r.Execute("");
 
             Assert.Equal("0,0:N", output);
@@ -25,8 +31,6 @@ namespace MarsRoverTests
         [InlineData("LLLL", "0,0:N")]
         public void Rotate(string command, string expectedOutput)
         {
-            var r = new Rover();
-
             var output = r.Execute(command);
 
             Assert.Equal(expectedOutput, output);
@@ -39,8 +43,6 @@ namespace MarsRoverTests
         [InlineData("RFFFLFFFLF", "2,3:W")]
         public void MoveForward(string command, string expectedOutput)
         {
-            var r = new Rover();
-
             var output = r.Execute(command);
 
             Assert.Equal(expectedOutput, output);
@@ -51,16 +53,27 @@ namespace MarsRoverTests
         [InlineData("FFFFFFFFFFFF", "0,1:N")]
         [InlineData("RFFFFFFFFFFF", "0,0:E")]
         [InlineData("RFFFFFFFFFFFF", "1,0:E")]
+        [InlineData("LFFF", "7,0:W")]
+        [InlineData("RRFFF", "0,7:S")]
         public void WrapOnGridWhenMovingOnXAxes(string command, string expectedOutput)
         {
-            var r = new Rover();
-
             var output = r.Execute(command);
 
             Assert.Equal(expectedOutput, output);
         }
 
+        [Theory]
+        [InlineData("FFFF", 0, 4, "O:0,3:N")]
+        [InlineData("FFFFLFFFF", 8, 4, "O:9,4:W")]
+        public void StopAndReportWhenObstacleIsFound(string command, int obstacleX, int obstacleY, string expectedOutput)
+        {
+            var obstacle = new Position(obstacleX, obstacleY);
 
+            var r = new Rover(new List<Position> { obstacle });
 
+            var output = r.Execute(command);
+
+            Assert.Equal(expectedOutput, output);
+        }
     }
 }

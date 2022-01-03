@@ -1,10 +1,15 @@
-﻿namespace MarsRoverTests
+﻿using System.Collections.Generic;
+
+namespace MarsRoverTests
 {
     internal class Direction
     {
+        
+
         public Direction()
         {
             currentDirection = Directions.N;
+            
         }
 
         internal enum Directions
