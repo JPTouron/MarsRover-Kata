@@ -31,6 +31,7 @@ namespace MarsRoverTests
 
             Assert.Equal(expectedOutput, output);
         }
+
         [Theory]
         [InlineData("F", "0,1:N")]
         [InlineData("RF", "1,0:E")]
@@ -44,6 +45,5 @@ namespace MarsRoverTests
 
             Assert.Equal(expectedOutput, output);
         }
-
     }
 }

@@ -12,7 +12,7 @@ Develop an API that translates the commands sent from earth to instructions that
 - [x] N is the direction it is facing (i.e N,S,E,W)
 - [x] L and R allow the rover to rotate left and right.
 - [x] F allows the rover to move one point in the current direction.
-- [] The rover receives a char array of commands e.g. RMMLM and returns the finishing point after the moves e.g. 2,1:N
+- [x] The rover receives a char array of commands e.g. RFFLF and returns the finishing point after the moves e.g. 2,1:N
 - [] The rover wraps around if it reaches the end of the grid. (meaning: coordinate 0,10 when y+1, becomes 0,0, and the same for x ord)
 - [] The grid may have obstacles. If a given sequence of commands encounters on obstacle, the rover moves up to the last possible point and reports the obstacle e.g. O:2,2:N, where 2,2 is the current position of the rover
 
