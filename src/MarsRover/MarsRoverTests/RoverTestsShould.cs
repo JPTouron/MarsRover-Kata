@@ -31,5 +31,19 @@ namespace MarsRoverTests
 
             Assert.Equal(expectedOutput, output);
         }
+        [Theory]
+        [InlineData("F", "0,1:N")]
+        [InlineData("RF", "1,0:E")]
+        [InlineData("RFFFLFFF", "3,3:N")]
+        [InlineData("RFFFLFFFLF", "2,3:W")]
+        public void MoveForward(string command, string expectedOutput)
+        {
+            var r = new Rover();
+
+            var output = r.Execute(command);
+
+            Assert.Equal(expectedOutput, output);
+        }
+
     }
 }

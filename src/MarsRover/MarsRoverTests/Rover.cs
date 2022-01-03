@@ -2,10 +2,14 @@
 {
     internal class Rover
     {
-        private Direction currentDirection = Direction.N;
+        private Direction currentDirection;
+        private int x;
+        private int y;
 
         public Rover()
         {
+            currentDirection = Direction.N;
+            x = y = 0;
         }
 
         private enum Direction
@@ -24,10 +28,33 @@
                     case 'L':
                         TurnLeft();
                         break;
+
+                    case 'F':
+                        Move();
+                        break;
                 }
             }
 
-            return $"0,0:{currentDirection.ToString()[0]}";
+            return $"{x},{y}:{currentDirection.ToString()[0]}";
+        }
+
+        private void Move()
+        {
+            switch (currentDirection)
+            {
+                case Direction.N:
+                    y++;
+                    break;
+                case Direction.E:
+                    x++;
+                    break;
+                case Direction.S:
+                    y--;
+                    break;
+                case Direction.W:
+                    x--;
+                    break;
+            }
         }
 
         private void TurnLeft()
@@ -40,12 +67,10 @@
 
         private void TurnRight()
         {
-
             if (currentDirection == Direction.W)
                 currentDirection = Direction.N;
             else
                 currentDirection++;
-
         }
     }
 }
