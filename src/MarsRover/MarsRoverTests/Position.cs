@@ -6,29 +6,43 @@
 
         public readonly int Y;
 
+        private int gridMaxWidth;
+
+        private int gridMaxHeight;
+
         public Position(int x, int y)
         {
             X = x;
             Y = y;
+            gridMaxWidth = 10;
+            gridMaxHeight = 10;
         }
 
         public Position Move(Direction direction)
         {
+            var newX = X;
+            var newY = Y;
+
             switch (direction.currentDirection)
             {
-                default:
                 case Direction.Directions.N:
-                    return new Position(X, Y + 1);
-
-                case Direction.Directions.E:
-                    return new Position(X + 1, Y);
+                    newY = (Y + 1) % (gridMaxHeight + 1);
+                    break;
 
                 case Direction.Directions.S:
-                    return new Position(X, Y - 1);
+                    newY = (Y - 1) % (gridMaxHeight - 1);
+                    break;
+
+                case Direction.Directions.E:
+                    newX = (X + 1) % (gridMaxWidth + 1);
+                    break;
 
                 case Direction.Directions.W:
-                    return new Position(X - 1, Y);
+                    newX = (X - 1) % (gridMaxWidth - 1);
+                    break;
             }
+
+            return new Position(newX, newY);
         }
 
         public override string ToString()

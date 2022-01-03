@@ -45,5 +45,22 @@ namespace MarsRoverTests
 
             Assert.Equal(expectedOutput, output);
         }
+
+        [Theory]
+        [InlineData("FFFFFFFFFFF", "0,0:N")]
+        [InlineData("FFFFFFFFFFFF", "0,1:N")]
+        [InlineData("RFFFFFFFFFFF", "0,0:E")]
+        [InlineData("RFFFFFFFFFFFF", "1,0:E")]
+        public void WrapOnGridWhenMovingOnXAxes(string command, string expectedOutput)
+        {
+            var r = new Rover();
+
+            var output = r.Execute(command);
+
+            Assert.Equal(expectedOutput, output);
+        }
+
+
+
     }
 }
