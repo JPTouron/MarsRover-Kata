@@ -1,19 +1,19 @@
-﻿namespace MarsRoverTests
+﻿using static MarsRoverTests.Direction;
+
+namespace MarsRoverTests
 {
     internal class Rover
     {
-        private Direction currentDirection;
+        private Direction direction;
         private int x;
         private int y;
 
         public Rover()
         {
-            currentDirection = Direction.N;
+            direction = new Direction() ;
             x = y = 0;
         }
 
-        private enum Direction
-        { N = 1, E, S, W }
 
         internal string Execute(string commands)
         {
@@ -22,11 +22,11 @@
                 switch (command)
                 {
                     case 'R':
-                        TurnRight();
+                        direction.TurnRight();
                         break;
 
                     case 'L':
-                        TurnLeft();
+                        direction.TurnLeft    ();
                         break;
 
                     case 'F':
@@ -35,40 +35,53 @@
                 }
             }
 
-            return $"{x},{y}:{currentDirection.ToString()[0]}";
+            return $"{x},{y}:{direction.DirectionAsText}";
         }
 
         private void Move()
         {
-            switch (currentDirection)
+            switch (direction.currentDirection)
             {
-                case Direction.N:
+                case Direction.Directions.N:
                     y++;
                     break;
-                case Direction.E:
+                case Direction.Directions.E:
                     x++;
                     break;
-                case Direction.S:
+                case Direction.Directions.S:
                     y--;
                     break;
-                case Direction.W:
+                case Direction.Directions.W:
                     x--;
                     break;
             }
         }
 
-        private void TurnLeft()
+        
+    }
+
+    internal class Direction {
+
+        internal Directions currentDirection { get; private set; }
+        public Direction()
         {
-            if (currentDirection == Direction.N)
-                currentDirection = Direction.W;
+            currentDirection = Directions.N;
+        }
+        internal enum Directions
+        { N = 1, E, S, W }
+        internal char DirectionAsText => currentDirection.ToString()[0];
+        internal void TurnLeft()
+        {
+            if (currentDirection == Directions.N)
+                currentDirection = Directions.W;
             else
                 currentDirection--;
         }
 
-        private void TurnRight()
+        internal void TurnRight()
         {
-            if (currentDirection == Direction.W)
-                currentDirection = Direction.N;
+            if (currentDirection == Directions.W)
+                currentDirection = Directions.N;
             else
                 currentDirection++;
         }
