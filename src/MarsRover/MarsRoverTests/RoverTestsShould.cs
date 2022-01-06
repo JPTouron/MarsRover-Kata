@@ -62,18 +62,5 @@ namespace MarsRoverTests
             Assert.Equal(expectedOutput, output);
         }
 
-        [Theory]
-        [InlineData("FFFF", 0, 4, "O:0,3:N")]
-        [InlineData("FFFFLFFFF", 8, 4, "O:9,4:W")]
-        public void StopAndReportWhenObstacleIsFound(string command, int obstacleX, int obstacleY, string expectedOutput)
-        {
-            var obstacle = new Position(obstacleX, obstacleY);
-
-            var r = new Rover(new List<Position> { obstacle });
-
-            var output = r.Execute(command);
-
-            Assert.Equal(expectedOutput, output);
-        }
     }
 }
